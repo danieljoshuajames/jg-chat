@@ -13,19 +13,36 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-if prompt := st.chat_input("What is up?"):
+# System prompt as 'Jobgraph', guiding on CEO-related inquiries
+st.info("""
+    **Welcome to Jobgraph!** I specialize in advising about the role of Chief Executive Officer (CEO). 
+    I can help you understand:
+    - What tasks a CEO typically handles.
+    - How CEOs are likely exposed to Large Language Models (LLMs) and artificial intelligence.
+    - How organizations might think about the CEO role changing in the future.
+    - What kind of policies could be implemented to bring about positive changes and efficiencies.
+    
+    **Please note:** I am here to guide on matters related to jobs and organizations. For questions outside this scope, consider using ChatGPT for more general inquiries.
+""")
+
+# Input from user
+if prompt := st.chat_input("How can I assist you today?"):
+    # Append user's message to session state
     st.session_state.messages.append({"role": "user", "content": prompt})
+    # Display user's input as a chat message
     with st.chat_message("user"):
         st.markdown(prompt)
 
+    # Generate response from the assistant based on the prompt
     with st.chat_message("assistant"):
+        # Ensure conversation flow by including all prior messages
         stream = client.chat.completions.create(
             model=st.session_state["openai_model"],
-            messages=[
-                {"role": m["role"], "content": m["content"]}
-                for m in st.session_state.messages
-            ],
+            messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
             stream=True,
         )
+        # Stream the response to the user
         response = st.write_stream(stream)
+    
+    # Append the assistant's response to session state
     st.session_state.messages.append({"role": "assistant", "content": response})
