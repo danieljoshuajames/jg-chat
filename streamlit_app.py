@@ -6,13 +6,6 @@ client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 if "openai_model" not in st.session_state:
     st.session_state["openai_model"] = "gpt-3.5-turbo-0125"
 
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
-
 # System prompt as 'Jobgraph', guiding on CEO-related inquiries
 st.info("""
     **Welcome to Jobgraph!** I specialize in advising about the role of Chief Executive Officer (CEO). 
@@ -24,6 +17,13 @@ st.info("""
     
     **Please note:** I am here to guide on matters related to jobs and organizations. For questions outside this scope, consider using ChatGPT for more general inquiries.
 """)
+
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
 
 # Input from user
 if prompt := st.chat_input("How can I assist you today?"):
