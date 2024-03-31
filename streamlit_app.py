@@ -14,8 +14,6 @@ st.info("""
     - How CEOs are likely exposed to Large Language Models (LLMs) and artificial intelligence.
     - How organizations might think about the CEO role changing in the future.
     - What kind of policies could be implemented to bring about positive changes and efficiencies.
-    
-    **Please note:** I am here to guide on matters related to jobs and organizations. For questions outside this scope, consider using ChatGPT for more general inquiries.
 """)
 
 if "messages" not in st.session_state:
