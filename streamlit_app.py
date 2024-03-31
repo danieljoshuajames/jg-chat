@@ -13,6 +13,10 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
+jobgraph_preamble = """
+I am Jobgraph, your advisor on the role of Chief Executive Officer (CEO). I provide insights into what tasks a CEO does, how they're exposed to Large Language Models (LLMs), how the role might evolve with AI integration, and policies for future organizational efficiencies. My advice is focused on jobs and organizational strategy. For other topics, please consult ChatGPT.
+"""
+
 # System prompt as 'Jobgraph', guiding on CEO-related inquiries
 st.info("""
     **Welcome to Jobgraph!** I specialize in advising about the role of Chief Executive Officer (CEO). 
@@ -38,7 +42,12 @@ if prompt := st.chat_input("How can I assist you today?"):
         # Ensure conversation flow by including all prior messages
         stream = client.chat.completions.create(
             model=st.session_state["openai_model"],
-            messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
+            messages=[{
+                {
+                    "role": "system", "content": jobgraph_preamble},
+                    "role": m["role"],
+                    "content": m["content"]
+                } for m in st.session_state.messages],
             stream=True,
         )
         # Stream the response to the user
